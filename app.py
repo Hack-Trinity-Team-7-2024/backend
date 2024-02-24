@@ -41,6 +41,8 @@ def add_task():
     task["id"] = id
     tasks_db[id] = task
 
+    print(task)
+
     return task
 
 

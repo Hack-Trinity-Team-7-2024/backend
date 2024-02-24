@@ -9,7 +9,7 @@ from langchain_core.output_parsers import StrOutputParser
 
 dotenv.load_dotenv()
 #llm = ChatOpenAI(model="gpt-4-0125-preview", temperature = 0.5) 
-llm = ChatOpenAI(temperature = 0) 
+llm = ChatOpenAI(temperature = 0.5) 
 output_parser = StrOutputParser()
 
 
