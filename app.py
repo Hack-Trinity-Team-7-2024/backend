@@ -98,9 +98,9 @@ def recreate_task(id):
     if id not in tasks_db:
         return Response(status=404)
     
-    user_message = request.get_json()
+    input = request.get_json()
     task = tasks_db[id]
-    return ai_part.task_recreate_breakdown(task=task, user_message=user_message)
+    return ai_part.task_recreate_breakdown(task=task, user_message=input["message"])
 
 if __name__ == '__main__':
     app.run(debug=True)
