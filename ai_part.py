@@ -95,12 +95,14 @@ def task_recreate_breakdown(task_name: str, user_message: str):
     })
     chain = prompt | llm | output_parser
 
-    output = chain.invoke({"task_title": task_name,
-                           "feedback": user_message})
+    output = json.loads(chain.invoke({"task_title": task_name,
+                           "feedback": user_message}))
+    for i, subtask in enumerate(output['points']):
+        output['points'][i] = f"{i+1}. {output['points'][i]}"
     return output
 
 if __name__ == '__main__':
     output = task_breakdown("I want learn how to create a RESTful API.")
     print(output)
-    #output2 = task_recreate_breakdown(json.loads(output), "Please do it with Express.js")
-    #print(output2)
+    output2 = task_recreate_breakdown(output, "Please do it with Express.js")
+    print(output2)
