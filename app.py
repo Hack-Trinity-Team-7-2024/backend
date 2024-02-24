@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request, Response
 import langchain
 import ai_part
 import json
+import time
 
 
 tasks_db = {}
@@ -28,6 +29,8 @@ def add_task():
     global last_task_id
 
     task = request.get_json()
+    task["completed"] = False
+    task["time"] = time.time_ns()
     
     # Where task["content"] is the initial task the user types in
     task_expanded = ai_part.task_expanding(task["content"])
@@ -62,12 +65,12 @@ def get_task(id):
 
 @app.get("/api/tasks/completed")
 def get_completed_tasks():
-    return [task for task in tasks_db if task["completed"]]
+    return [task for (_,task) in tasks_db.items() if task["completed"]]
 
 
 @app.get("/api/tasks/not-completed")
 def get_not_completed_tasks():
-    return [task for task in tasks_db if not task["completed"]]
+    return [task for (_,task) in tasks_db.items() if not task["completed"]]
 
 
 @app.patch("/api/tasks/<int:id>")
