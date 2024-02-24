@@ -21,14 +21,7 @@ def task_expanding_title(task: str):
      ("user", "{task}")
     })
     chain = prompt | llm | output_parser
-    print("IN TITLE")
-    print(task)
-    print(type(task))
-
     title = chain.invoke({"task": task})
-
-    print(title)
-    print(type(title))
     return title
 
 def task_expanding_description(task: str):
@@ -39,15 +32,7 @@ def task_expanding_description(task: str):
      ("user", "{task}")
     })
     chain = prompt | llm | output_parser
-
-    print("IN DESCRIPTION")
-    print(task)
-    print(type(task)
-          )
     description = chain.invoke({"task": task})
-
-    print(description)
-    print(type(description))
     return description
 
 
