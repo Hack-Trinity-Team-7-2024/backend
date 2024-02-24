@@ -32,10 +32,7 @@ def add_task():
     task["completed"] = False
     task["time"] = time.time_ns()
     
-    # Where task["content"] is the initial task the user types in
     task_expanded = ai_part.task_expanding(task["content"])
-    task_expanded = json.loads(task_expanded)
-    
     task.update(task_expanded)
 
     id = last_task_id
@@ -103,7 +100,11 @@ def recreate_task(id):
     
     input = request.get_json()
     task = tasks_db[id]['content']
-    return ai_part.task_recreate_breakdown(task_name=task, user_message=input["message"])
+    recreated_task = ai_part.task_recreate_breakdown(task_name=task, user_message=input["message"])
+    print(recreated_task)
+    print(type(recreated_task))
+    print(json.loads(recreated_task))
+    return recreated_task
 
 if __name__ == '__main__':
     app.run(debug=True)

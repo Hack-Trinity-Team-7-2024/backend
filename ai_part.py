@@ -8,20 +8,53 @@ from langchain_core.output_parsers import StrOutputParser
 
 
 dotenv.load_dotenv()
-llm = ChatOpenAI(model="gpt-3.5-turbo", temperature = 0.5) 
+llm = ChatOpenAI(model="gpt-4-0125-preview", temperature = 0.5) 
+#llm = ChatOpenAI(temperature = 0) 
 output_parser = StrOutputParser()
 
-def task_expanding(task: str):
-    prompt = ChatPromptTemplate.from_messages([
+
+def task_expanding_title(task: str):
+    prompt = ChatPromptTemplate.from_messages({
     ("system",
      """You are helping someone clarify a task.
-     A task will be input and you are to give it a title and short description, with brief points, no fancy language, as if it were a task card.
-     Format your output in the form of JSON.
-     You are to keep the description brief and broad."""),
-    ("user", "{input}")
-    ])
+     A task will be input and you are to give it a title, briefly describing it."""),
+     ("user", "{task}")
+    })
     chain = prompt | llm | output_parser
-    output = chain.invoke({"input": task})
+    print("IN TITLE")
+    print(task)
+    print(type(task))
+
+    title = chain.invoke({"task": task})
+
+    print(title)
+    print(type(title))
+    return title
+
+def task_expanding_description(task: str):
+    prompt = ChatPromptTemplate.from_messages({
+    ("system",
+     """You are helping someone clarify a task.
+     A task blurb will be input and you are to give it an imperative description, briefly describing this task with 1 or 2 sentences."""),
+     ("user", "{task}")
+    })
+    chain = prompt | llm | output_parser
+
+    print("IN DESCRIPTION")
+    print(task)
+    print(type(task)
+          )
+    description = chain.invoke({"task": task})
+
+    print(description)
+    print(type(description))
+    return description
+
+
+def task_expanding(task: str):
+    title = task_expanding_title(task)
+    description = task_expanding_description(task)
+    output = {"title": title, "description": description}
     return output
 
 
@@ -56,6 +89,10 @@ def task_recreate_breakdown(task_name: str, user_message: str):
         The user would like you to create the Sub-Tasks for the given Task in JSON
         giving the existing Task name and a prompt.
         Make sure it is in JSON with the headers 'content' and 'points' 
+        e.g. {{
+        content: *insert content name here*,
+        points: [*subtask 1*, *subtask 2*, *subtask 3* ....]
+        }}
         where content is the Task name, and points is the Sub-Tasks.
         Sub-Tasks cannot have their own Sub-Tasks."""),
         ("user", "{task_title}"),
