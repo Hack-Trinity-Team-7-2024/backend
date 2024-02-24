@@ -66,7 +66,9 @@ def format_breakdown(text):
     })
     chain = prompt | llm | output_parser
     output = chain.invoke({"text": text}).split('\n')
-    return {"points": output}
+    output_status = [False] * len(output)
+    return {"points": output,
+            "points_completed": output_status}
 
 def task_recreate_breakdown(task_name: str, user_message: str):
     """
@@ -99,6 +101,8 @@ def task_recreate_breakdown(task_name: str, user_message: str):
                            "feedback": user_message}))
     for i, subtask in enumerate(output['points']):
         output['points'][i] = f"{i+1}. {output['points'][i]}"
+    output_status = [False] * len(output['points'])
+    output['points_completed'] = output_status
     return output
 
 if __name__ == '__main__':
