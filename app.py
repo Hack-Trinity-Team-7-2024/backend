@@ -16,11 +16,11 @@ def helloworld():
         return jsonify(data)
 
 
-@app.get("/tasks")
+@app.get("/api/tasks")
 def get_tasks():
     return list(tasks_db.values())
 
-@app.post("/tasks")
+@app.post("/api/tasks")
 def add_task():
     global last_task_id
 
@@ -34,11 +34,11 @@ def add_task():
 
     return {"id": last_task_id}
 
-@app.get("/tasks/<int:id>")
+@app.get("/api/tasks/<int:id>")
 def get_task(id):
     return tasks_db[id]
 
-@app.patch("/tasks/<int:id>")
+@app.patch("/api/tasks/<int:id>")
 def patch_task(id):
     task = tasks_db[id]
     patch = request.get_json()
@@ -48,13 +48,13 @@ def patch_task(id):
     return task
 
 
-@app.get("/tasks/clarify/<int:id>")
+@app.get("/api/tasks/clarify/<int:id>")
 def clarify_task(id):
     task = tasks_db[id]
     return ai_part.task_expanding(task)
 
 
-@app.get("/tasks/breakdown/<int:id>")
+@app.get("/api/tasks/breakdown/<int:id>")
 def breakdown_task(id):
 	task = tasks_db[id]
 	return ai_part.task_breakdown(task)

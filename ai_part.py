@@ -39,6 +39,7 @@ def task_breakdown(task: str):
     output = chain.invoke({"input": task})
     return output
 
+if __name__ == '__main__':
 
-output = task_breakdown("I want to start studying linear algebra, where should I start?")
-print(output)
+    output = task_breakdown("I want to start studying linear algebra, where should I start?")
+    print(output)
