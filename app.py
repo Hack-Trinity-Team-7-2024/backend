@@ -91,6 +91,16 @@ def breakdown_task(id):
 	task = tasks_db[id]
 	return ai_part.task_breakdown(task)
 
+@app.post("/api/tasks/recreate/<int:id>")
+def recreate_task(id):
+    # Given a task id and message, recreates the sub-tasks for that task id in accordance 
+    # with the message
+    if id not in tasks_db:
+        return Response(status=404)
+    
+    user_message = request.get_json()
+    task = tasks_db[id]
+    return ai_part.task_recreate_breakdown(task=task, user_message=user_message)
 
 if __name__ == '__main__':
     app.run(debug=True)
