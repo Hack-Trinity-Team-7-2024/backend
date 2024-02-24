@@ -1,5 +1,8 @@
 from flask import Flask, jsonify, request
+import langchain
 import ai_part
+import json
+
 
 tasks_db = {}
 last_task_id = 0
@@ -25,14 +28,22 @@ def add_task():
     global last_task_id
 
     task = request.get_json()
+    
+    # Where task["content"] is the initial task the user types in
+    task_expanded = ai_part.task_expanding(task["content"])
+    task_expanded = json.loads(task_expanded)
+    
+    task["title"] = task_expanded["title"]
+    task["description"] = task_expanded["description"]
 
     id = last_task_id
     last_task_id += 1
 
     task["id"] = id
+    print(task)
     tasks_db[id] = task
 
-    return {"id": last_task_id}
+    return task
 
 @app.get("/api/tasks/<int:id>")
 def get_task(id):
