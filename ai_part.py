@@ -30,7 +30,7 @@ def task_breakdown(task: str):
         ("system", 
         """You are an expert at breaking down tasks.
         A task will be given to you and you are to break it down into granular sub-tasks
-        Format your output in the form of JSON.
+        Format your output in the form of JSON containing the Task, and the list of Sub-Tasks.
         You are to keep the sub-tasks in brief bulletpoints format.
         Sub-tasks cannot have their own sub-tasks."""),
         ("user", "{input}")
