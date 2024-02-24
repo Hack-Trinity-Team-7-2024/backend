@@ -58,6 +58,18 @@ def delete_task(id):
 def get_task(id):
     return tasks_db[id]
 
+
+
+@app.get("/api/tasks/completed")
+def get_completed_tasks():
+    return [task for task in tasks_db if task["completed"]]
+
+
+@app.get("/api/tasks/not-completed")
+def get_completed_tasks():
+    return [task for task in tasks_db if not task["completed"]]
+
+
 @app.patch("/api/tasks/<int:id>")
 def patch_task(id):
     task = tasks_db[id]

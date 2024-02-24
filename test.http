@@ -1,0 +1,37 @@
+@base = http://localhost:5000
+
+###
+
+GET {{base}}/tasks
+
+###
+
+POST {{base}}/tasks
+Content-Type: application/json
+
+{
+    "time": "{{$timestamp}}",
+    "content": "make to-do list app"
+}
+
+###
+
+GET {{base}}/tasks/0
+
+###
+
+PATCH {{base}}/tasks/2
+Content-Type: application/json
+
+{
+    "content": "updated content",
+    "new": "some new field"
+}
+
+###
+
+GET {{base}}/tasks/clarify/1
+
+###
+
+GET {{base}}/tasks/breakdown/1
