@@ -66,7 +66,7 @@ def get_completed_tasks():
 
 
 @app.get("/api/tasks/not-completed")
-def get_completed_tasks():
+def get_not_completed_tasks():
     return [task for task in tasks_db if not task["completed"]]
 
 
