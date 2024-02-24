@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, Response
 import langchain
 import ai_part
 import json
@@ -42,6 +42,17 @@ def add_task():
     tasks_db[id] = task
 
     return task
+
+
+@app.delete("/api/tasks/<int:id>")
+def delete_task(id):
+    if id in tasks_db:
+        del tasks_db[id]
+        return Response(status=200)
+    
+    return Response(status=204)
+    
+
 
 @app.get("/api/tasks/<int:id>")
 def get_task(id):
