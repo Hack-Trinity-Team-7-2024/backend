@@ -7,7 +7,7 @@ from langchain_core.output_parsers import StrOutputParser
 
 
 
-#dotenv.load_dotenv()
+dotenv.load_dotenv()
 llm = ChatOpenAI(model="gpt-3.5-turbo", temperature = 0) 
 output_parser = StrOutputParser()
 
@@ -31,7 +31,8 @@ def task_breakdown(task: str):
         """You are an expert at breaking down tasks.
         A task will be given to you and you are to break it down into granular sub-tasks
         Format your output in the form of JSON.
-        You are to keep the sub-tasks in brief bulletpoints format."""),
+        You are to keep the sub-tasks in brief bulletpoints format.
+        Sub-tasks cannot have their own sub-tasks."""),
         ("user", "{input}")
     })
     chain = prompt | llm | output_parser
@@ -39,5 +40,5 @@ def task_breakdown(task: str):
     return output
 
 
-output = task_breakdown("I need to build a localhost web proxy for an assignment")
+output = task_breakdown("I want to start studying linear algebra, where should I start?")
 print(output)
