@@ -1,6 +1,5 @@
 from flask import Flask, jsonify, request
-import langchain
-
+import ai_part
 
 tasks_db = {}
 last_task_id = 0
@@ -47,6 +46,18 @@ def patch_task(id):
     task.update(patch)
 
     return task
+
+
+@app.get("/tasks/clarify/<int:id>")
+def clarify_task(id):
+    task = tasks_db[id]
+    return ai_part.task_expanding(task)
+
+
+@app.get("/tasks/breakdown/<int:id>")
+def breakdown_task(id):
+	task = tasks_db[id]
+	return ai_part.task_breakdown(task)
 
 
 if __name__ == '__main__':
