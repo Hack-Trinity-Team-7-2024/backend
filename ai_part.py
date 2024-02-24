@@ -40,31 +40,30 @@ def task_breakdown(task: str):
     return output
 
 
-def task_recreate_breakdown(task: dict, user_message: str):
+def task_recreate_breakdown(task_name: str, user_message: str):
     """
-    Asks the AI to regenerate a list of subtasks, given a list of subtasks and 
-    an explanation as to why they are unsuitable.
+    Asks the AI to regenerate a list of subtasks, given user feedback.
+    task_name is the 'content' field in the header.
 
-    :param task: dict containing the Task name and list of unsuitable sub-tasks
+    :param task_name
     :param user_message: User-submitted prompt detailing what about sub-tasks needs to be changed
     """
 
     prompt = ChatPromptTemplate.from_messages({
         ("system", 
         """You are an expert at breaking down tasks.
-        A Task will be given to you in a JSON format with accompanying Sub-Tasks.
-        The user would like you to re-create the Sub-Tasks for the given Task in JSON
-        giving the existing Task name and the re-created Sub-Tasks
-        and has given feedback.
-        Make sure the JSON formatting is the exact same"""),
+        A Task title will be given to you and a piece of user-feedback.
+        The user would like you to create the Sub-Tasks for the given Task in JSON
+        giving the existing Task name and a prompt.
+        Make sure it is in JSON with the headers 'content' and 'points' 
+        where content is the Task name, and points is the Sub-Tasks.
+        Sub-Tasks cannot have their own Sub-Tasks."""),
         ("user", "{task_title}"),
-        ("user",  "{subtasks}"),
         ("user", "{feedback}")
     })
     chain = prompt | llm | output_parser
 
-    output = chain.invoke({"task_title": task["content"],
-                           "subtasks": [subtask for subtask in task["points"]],
+    output = chain.invoke({"task_title": task_name,
                            "feedback": user_message})
     return output
 
