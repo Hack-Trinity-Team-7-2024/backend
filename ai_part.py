@@ -52,7 +52,7 @@ def task_breakdown(task: str):
         ("system", 
         """You are an expert at breaking down tasks.
         A task will be given to you and you are to break it down into granular, one-line Sub-Tasks.
-        You will generate no more than 6 sub-tasks"""),
+        Use as few steps as possible. Enumerate each line."""),
         ("user", "{input}")
     })
     chain = prompt | llm | output_parser
