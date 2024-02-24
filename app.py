@@ -106,6 +106,7 @@ def recreate_task(id):
     input = request.get_json()
     task = tasks_db[id]['content']
     recreated_task = ai_part.task_recreate_breakdown(task_name=task, user_message=input["message"])
+    task.update(recreate_task)
     return recreated_task
 
 if __name__ == '__main__':
