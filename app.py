@@ -83,13 +83,18 @@ def patch_task(id):
 @app.get("/api/tasks/clarify/<int:id>")
 def clarify_task(id):
     task = tasks_db[id]
+    task_clarified = ai_part.task_expanding(task["content"])
+    task.update(task_clarified)
     return ai_part.task_expanding(task)
 
 
 @app.get("/api/tasks/breakdown/<int:id>")
 def breakdown_task(id):
-	task = tasks_db[id]
-	return ai_part.task_breakdown(task)
+    task = tasks_db[id]
+    task_with_points = ai_part.task_breakdown(task["content"])
+    task.update(task_with_points)
+    return task
+
 
 @app.post("/api/tasks/recreate/<int:id>")
 def recreate_task(id):
