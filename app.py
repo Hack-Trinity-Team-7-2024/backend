@@ -33,14 +33,12 @@ def add_task():
     task_expanded = ai_part.task_expanding(task["content"])
     task_expanded = json.loads(task_expanded)
     
-    task["title"] = task_expanded["title"]
-    task["description"] = task_expanded["description"]
+    task.update(task_expanded)
 
     id = last_task_id
     last_task_id += 1
 
     task["id"] = id
-    print(task)
     tasks_db[id] = task
 
     return task
