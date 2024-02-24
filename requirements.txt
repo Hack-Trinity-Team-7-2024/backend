@@ -1,2 +1,4 @@
 Flask==3.0.2
 langchain==0.1.9
+langchain_openai==0.0.7
+python-dotenv==1.0.1
