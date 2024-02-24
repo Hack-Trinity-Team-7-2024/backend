@@ -62,8 +62,9 @@ def task_recreate_breakdown(task: dict, user_message: str):
         ("user", "{feedback}")
     })
     chain = prompt | llm | output_parser
-    output = chain.invoke({"task_title": task["Task"],
-                           "subtasks": [subtask for subtask in task["Sub-Tasks"]],
+
+    output = chain.invoke({"task_title": task["content"],
+                           "subtasks": [subtask for subtask in task["points"]],
                            "feedback": user_message})
     return output
 

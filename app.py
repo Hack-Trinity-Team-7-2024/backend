@@ -96,6 +96,8 @@ def recreate_task(id):
     # Given a task id and message, recreates the sub-tasks for that task id in accordance 
     # with the message
     if id not in tasks_db:
+        print("all current tasks are:")
+        print(tasks_db)
         return Response(status=404)
     
     input = request.get_json()
