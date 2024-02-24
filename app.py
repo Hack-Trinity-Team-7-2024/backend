@@ -1,5 +1,8 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, Response
+import langchain
 import ai_part
+import json
+
 
 tasks_db = {}
 last_task_id = 0
@@ -25,6 +28,12 @@ def add_task():
     global last_task_id
 
     task = request.get_json()
+    
+    # Where task["content"] is the initial task the user types in
+    task_expanded = ai_part.task_expanding(task["content"])
+    task_expanded = json.loads(task_expanded)
+    
+    task.update(task_expanded)
 
     id = last_task_id
     last_task_id += 1
@@ -32,11 +41,34 @@ def add_task():
     task["id"] = id
     tasks_db[id] = task
 
-    return {"id": last_task_id}
+    return task
+
+
+@app.delete("/api/tasks/<int:id>")
+def delete_task(id):
+    if id in tasks_db:
+        del tasks_db[id]
+        return Response(status=200)
+    
+    return Response(status=204)
+    
+
 
 @app.get("/api/tasks/<int:id>")
 def get_task(id):
     return tasks_db[id]
+
+
+
+@app.get("/api/tasks/completed")
+def get_completed_tasks():
+    return [task for task in tasks_db if task["completed"]]
+
+
+@app.get("/api/tasks/not-completed")
+def get_not_completed_tasks():
+    return [task for task in tasks_db if not task["completed"]]
+
 
 @app.patch("/api/tasks/<int:id>")
 def patch_task(id):

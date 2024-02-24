@@ -8,14 +8,14 @@ from langchain_core.output_parsers import StrOutputParser
 
 
 dotenv.load_dotenv()
-llm = ChatOpenAI(model="gpt-3.5-turbo", temperature = 0) 
+llm = ChatOpenAI(model="gpt-3.5-turbo", temperature = 0.5) 
 output_parser = StrOutputParser()
 
 def task_expanding(task: str):
     prompt = ChatPromptTemplate.from_messages([
     ("system",
      """You are helping someone clarify a task.
-     A task will be input and you are to give it a title and short description as if it were a task card.
+     A task will be input and you are to give it a title and short description, with brief points, no fancy language, as if it were a task card.
      Format your output in the form of JSON.
      You are to keep the description brief and broad."""),
     ("user", "{input}")
