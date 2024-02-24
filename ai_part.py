@@ -16,8 +16,8 @@ output_parser = StrOutputParser()
 def task_expanding_title(task: str):
     prompt = ChatPromptTemplate.from_messages({
     ("system",
-     """You are helping someone clarify a task.
-     A task will be input and you are to give it a title, briefly describing it."""),
+     """.
+     Write a brief sentence which describes the following task description:"""),
      ("user", "{task}")
     })
     chain = prompt | llm | output_parser
@@ -27,8 +27,8 @@ def task_expanding_title(task: str):
 def task_expanding_description(task: str):
     prompt = ChatPromptTemplate.from_messages({
     ("system",
-     """You are helping someone clarify a task.
-     A task blurb will be input and you are to give it an imperative description, briefly describing this task with 1 or 2 sentences."""),
+     """You are helping some come up with a description for a task.
+     A task blurb will be input and you are to give it an imperative description, briefly describing this task with 1 or 2 sentences but not any advice on how to complete the task. The task is as follows:"""),
      ("user", "{task}")
     })
     chain = prompt | llm | output_parser
