@@ -8,8 +8,8 @@ from langchain_core.output_parsers import StrOutputParser
 
 
 dotenv.load_dotenv()
-llm = ChatOpenAI(model="gpt-4-0125-preview", temperature = 0.5) 
-#llm = ChatOpenAI(temperature = 0) 
+#llm = ChatOpenAI(model="gpt-4-0125-preview", temperature = 0.5) 
+llm = ChatOpenAI(temperature = 0) 
 output_parser = StrOutputParser()
 
 
@@ -62,16 +62,26 @@ def task_breakdown(task: str):
     prompt = ChatPromptTemplate.from_messages({
         ("system", 
         """You are an expert at breaking down tasks.
-        A task will be given to you and you are to break it down into granular sub-tasks
-        Format your output in the form of JSON containing the Task, and the list of Sub-Tasks.
-        You are to keep the sub-tasks in brief bulletpoints format.
-        Sub-tasks cannot have their own sub-tasks."""),
+        A task will be given to you and you are to break it down into granular, one-line Sub-Tasks.
+        You will generate no more than 6 sub-tasks"""),
         ("user", "{input}")
     })
     chain = prompt | llm | output_parser
     output = chain.invoke({"input": task})
+    output = format_breakdown(output)
     return output
 
+def format_breakdown(text):
+    prompt = ChatPromptTemplate.from_messages({
+        ('system',
+         """
+        Given the following list of tasks, format it such that it is a newline separated list
+                          """),
+        ("user", "{text}")
+    })
+    chain = prompt | llm | output_parser
+    output = chain.invoke({"text": text}).split('\n')
+    return {"points": output}
 
 def task_recreate_breakdown(task_name: str, user_message: str):
     """
@@ -107,5 +117,5 @@ def task_recreate_breakdown(task_name: str, user_message: str):
 if __name__ == '__main__':
     output = task_breakdown("I want learn how to create a RESTful API.")
     print(output)
-    output2 = task_recreate_breakdown(json.loads(output), "Please do it with Express.js")
-    print(output2)
+    #output2 = task_recreate_breakdown(json.loads(output), "Please do it with Express.js")
+    #print(output2)
