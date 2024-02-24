@@ -17,7 +17,8 @@ def task_expanding_title(task: str):
     prompt = ChatPromptTemplate.from_messages({
     ("system",
      """.
-     Write a brief sentence which describes the following task description:"""),
+     Write a title for the following task description. Keep it less than 5 words. 
+     Do not prepend it with the word "title" or "task". Do not put it in quotes."""),
      ("user", "{task}")
     })
     chain = prompt | llm | output_parser
@@ -28,7 +29,10 @@ def task_expanding_description(task: str):
     prompt = ChatPromptTemplate.from_messages({
     ("system",
      """You are helping some come up with a description for a task.
-     A task blurb will be input and you are to give it an imperative description, briefly describing this task with 1 or 2 sentences but not any advice on how to complete the task. The task is as follows:"""),
+     A task blurb will be input and you are to give it an imperative description, 
+     briefly describing this task with 1 or 2 sentences but not any advice on how 
+     to complete the task. Do not prepend your response with the word "task".
+     The task is as follows:"""),
      ("user", "{task}")
     })
     chain = prompt | llm | output_parser
