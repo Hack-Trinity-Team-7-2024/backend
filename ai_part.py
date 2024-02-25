@@ -80,7 +80,9 @@ def format_breakdown(text):
 def parse_garbage(tasks:list):
     regex = "^\\d*\\s*[\\-\\.)]?\\s+"
     for i in range(len(tasks)):
-        if re.match(regex, tasks[i]):
+        if task.strip() == "":
+            tasks.pop(i)
+        if re.match(regex, tasks[i]) or task.strip() == "":
             tasks[i] = re.split(regex, tasks[i])[1]
         
     return tasks
@@ -138,6 +140,11 @@ def task_recreate_breakdown_with_context(task: dict, user_message: str):
         ("user", "{feedback_context}"),
         ("system",
         """
+        MAKING SURE that the new subtasks match this description
+        """),
+        ("user", "{task_description}"),
+        ("system",
+        """
         Where the theme of the task is:
         """),
         ("user", "{task_title}"),
@@ -157,6 +164,7 @@ def task_recreate_breakdown_with_context(task: dict, user_message: str):
     #                        "feedback": user_message})
     output = chain.invoke({"subtask_list": task["points"],
                            "feedback_context": user_message,
+                           "task_description": task["description"],
                            "task_title": task["content"]})
     output = format_breakdown(output)
     return output
