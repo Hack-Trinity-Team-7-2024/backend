@@ -79,13 +79,15 @@ def format_breakdown(text):
 
 def parse_garbage(tasks:list):
     regex = "^\\d*\\s*[\\-\\.)]?\\s+"
-    for i in range(len(tasks)):
-        if tasks[i].strip() == "":
-            tasks.pop(i)
-        if re.match(regex, tasks[i]) or task.strip() == "":
-            tasks[i] = re.split(regex, tasks[i])[1]
+    res = []
+    for task in tasks:
+        if task.strip() == "":
+            continue
+        if re.match(regex, task): #or task.strip() == "":
+            task = re.split(regex, task)[1]
+        res.append(task)
         
-    return tasks
+    return res
 
 
 def task_recreate_breakdown(task_name: str, user_message: str):
