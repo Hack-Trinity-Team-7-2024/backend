@@ -79,8 +79,6 @@ def format_breakdown(text):
 
 def parse_garbage(tasks:list):
     regex = "^\d+\s*[-\\.)]?\s+"
-    print("LIST OF TASKS: ")
-    print(tasks)
     for task in tasks:
         if re.match(regex, task):
             task = re.split(regex, task)[1]
