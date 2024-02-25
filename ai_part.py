@@ -78,10 +78,13 @@ def format_breakdown(text):
 
 
 def parse_garbage(tasks:list):
-    regex = "^\d+\s*[-\\.)]?\s+"
-    for task in tasks:
-        if re.match(regex, task):
-            task = re.split(regex, task)[1]
+    regex = "^\\d+\\s*[\\-\\.)]?\\s+"
+    for i in range(len(tasks)):
+        print("Old task: " + tasks[i])
+        if re.match(regex, tasks[i]):
+            tasks[i] = re.split(regex, tasks[i])[1]
+        print("New task: " + tasks[i])
+        
     return tasks
 
 
