@@ -128,7 +128,7 @@ def task_recreate_breakdown_with_context(task: dict, user_message: str):
 
     prompt = ChatPromptTemplate.from_messages({
         ("system", 
-        """Recreate the following list of subtasks:
+        """Recreate the following list of subtasks (might also be called points or tasks):
         """),
         ("user", "{subtask_list}"),
         ("system",
