@@ -104,7 +104,6 @@ def task_recreate_breakdown(task_name: str, user_message: str):
         giving the existing Task name and a prompt.
         Make sure it is in JSON with the headers 'content' and 'points' 
         e.g. {{
-        content: *insert content name here*,
         points: [*subtask 1*, *subtask 2*, *subtask 3* ....]
         }}
         where content is the Task name, and points is the Sub-Tasks.
@@ -114,13 +113,9 @@ def task_recreate_breakdown(task_name: str, user_message: str):
     })
     chain = prompt | llm | output_parser
 
-    output = json.loads(chain.invoke({"task_title": task_name,
-                           "feedback": user_message}))
-    
-    for i, subtask in enumerate(output['points']):
-        output['points'][i] = f"{i+1}. {output['points'][i]}"
-    output_status = [False] * len(output['points'])
-    output['points_completed'] = output_status
+    output = chain.invoke({"task_title": task_name,
+                           "feedback": user_message})
+    output = format_breakdown(output)
     return output
 
 
