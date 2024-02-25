@@ -107,6 +107,7 @@ def task_recreate_breakdown(task_name: str, user_message: str):
         output['points'][i] = f"{i+1}. {output['points'][i]}"
     output_status = [False] * len(output['points'])
     output['points_completed'] = output_status
+    print(f'output is {output}')
     return output
 
 if __name__ == '__main__':
