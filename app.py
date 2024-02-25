@@ -111,5 +111,19 @@ def recreate_task(id):
     task.update(recreated_task)
     return recreated_task
 
+
+@app.post("/api/tasks/recreatecontext/<int:id>")
+def recreate_task_with_context(id):
+    # Given a task id and message, recreates the sub-tasks for that task id in accordance 
+    # with the message
+    if id not in tasks_db:
+        return Response(status=404)
+    
+    input = request.get_json()
+    task = tasks_db[id]
+    recreated_task = ai_part.task_recreate_breakdown_with_context(task, user_message=input["message"])
+    task.update(recreated_task)
+    return recreated_task
+
 if __name__ == '__main__':
     app.run(debug=True)
