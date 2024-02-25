@@ -82,9 +82,8 @@ def parse_garbage(tasks:list):
     print("LIST OF TASKS: ")
     print(tasks)
     for task in tasks:
-        parsed = re.split(regex, task)[1]
-        print(parsed)
-        task = parsed
+        if re.match(regex, task):
+            task = re.split(regex, task)[1]
     return tasks
 
 
