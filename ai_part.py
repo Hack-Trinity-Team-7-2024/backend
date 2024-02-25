@@ -80,7 +80,7 @@ def format_breakdown(text):
 def parse_garbage(tasks:list):
     regex = "^\\d*\\s*[\\-\\.)]?\\s+"
     for i in range(len(tasks)):
-        if task.strip() == "":
+        if tasks[i].strip() == "":
             tasks.pop(i)
         if re.match(regex, tasks[i]) or task.strip() == "":
             tasks[i] = re.split(regex, tasks[i])[1]
