@@ -4,6 +4,7 @@ from langchain_openai import ChatOpenAI
 import json
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
+import re
 
 
 
@@ -70,11 +71,60 @@ def format_breakdown(text):
     })
     chain = prompt | llm | output_parser
     output = chain.invoke({"text": text}).split('\n')
+    output = parse_garbage(output)
     output_status = [False] * len(output)
     return {"points": output,
             "points_completed": output_status}
 
+
+def parse_garbage(tasks:list):
+    regex = "^\d+\s*[-\\.)]?\s+"
+    print("LIST OF TASKS: ")
+    print(tasks)
+    for task in tasks:
+        parsed = re.split(regex, task)[1]
+        print(parsed)
+        task = parsed
+    return tasks
+
+
 def task_recreate_breakdown(task_name: str, user_message: str):
+    """
+    Asks the AI to regenerate a list of subtasks, given user feedback.
+    task_name is the 'content' field in the header.
+
+    :param task_name
+    :param user_message: User-submitted prompt detailing what about sub-tasks needs to be changed
+    """
+    prompt = ChatPromptTemplate.from_messages({
+        ("system", 
+        """You are an expert at breaking down tasks.
+        A Task title will be given to you and a piece of user-feedback.
+        The user would like you to create the Sub-Tasks for the given Task in JSON
+        giving the existing Task name and a prompt.
+        Make sure it is in JSON with the headers 'content' and 'points' 
+        e.g. {{
+        content: *insert content name here*,
+        points: [*subtask 1*, *subtask 2*, *subtask 3* ....]
+        }}
+        where content is the Task name, and points is the Sub-Tasks.
+        Sub-Tasks cannot have their own Sub-Tasks."""),
+        ("user", "{task_title}"),
+        ("user", "{feedback}")
+    })
+    chain = prompt | llm | output_parser
+
+    output = json.loads(chain.invoke({"task_title": task_name,
+                           "feedback": user_message}))
+    
+    for i, subtask in enumerate(output['points']):
+        output['points'][i] = f"{i+1}. {output['points'][i]}"
+    output_status = [False] * len(output['points'])
+    output['points_completed'] = output_status
+    return output
+
+
+def task_recreate_breakdown_with_context(task_name: str, user_message: str):
     """
     Asks the AI to regenerate a list of subtasks, given user feedback.
     task_name is the 'content' field in the header.

@@ -24,7 +24,8 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"humao.rest-client"
+				"humao.rest-client",
+				"ms-toolsai.jupyter"
 			]
 		}
 	}
