@@ -78,7 +78,7 @@ def format_breakdown(text):
 
 
 def parse_garbage(tasks:list):
-    regex = "^\\d+\\s*[\\-\\.)]?\\s+"
+    regex = "^\\d*\\s*[\\-\\.)]?\\s+"
     for i in range(len(tasks)):
         print("Old task: " + tasks[i])
         if re.match(regex, tasks[i]):
